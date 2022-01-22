@@ -8,5 +8,5 @@ rect.draw(canvas)
 for _ in range(100):
     rect.move(x=1,y=2)
 
-canvas.save("test.gif", "gif", optimize_gif=True, duration=25, loop=False)
+canvas.save("test.gif", optimize_gif=True, duration=25)
 canvas.save("test.png", no_gif=True)
