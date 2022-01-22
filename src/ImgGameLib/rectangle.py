@@ -12,7 +12,7 @@ class Rectangle(Drawable):
         - coords
         - center
     """
-    def __init__(self, x1: int, y1: int, width: int, height: int, border: Union[tuple, str]="black", fill: Union[tuple, str]=None, border_thickness: int=1):
+    def __init__(self, x1: int, y1: int, width: int, height: int, border: Union[tuple, str]="black", fill: Union[tuple, str]="black", border_thickness: int=1):
         """Initializes a rectangle.
         
         Required Parameters:
