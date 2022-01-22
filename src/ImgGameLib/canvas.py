@@ -64,7 +64,7 @@ class Canvas:
         if self.gif:
             self._append_frame()
     
-    def save(self, save_file: Union[str, IO], filetype: Optional[str]=None, *, optimize_gif: bool=False, loop: bool=True, duration: int=0) -> None:
+    def save(self, save_file: Union[str, IO], filetype: Optional[str]=None, *, optimize_gif: bool=False, loop: bool=False, duration: int=0, no_gif: bool=False) -> None:
         """Saves the image to a file.
         
         Required Parameters:
@@ -74,11 +74,12 @@ class Canvas:
             - filetype: Optional[str] - the type of file
         
         Optional GIF Parameters:
+            - no_gif: bool - if true, only the current frame will be saved
             - optimize_gif: bool - whether to optimize the gif
             - loop: bool - whether the gif should loop
             - duration: int - the duration of the gif in milliseconds
         """
-        if self.gif:
+        if self.gif and not no_gif:
             params = {
                 "fp":save_file,
                 "format":filetype,
@@ -92,4 +93,8 @@ class Canvas:
         else:
             if optimize_gif:
                 raise ValueError("You cannot optimize an image which isn't a gif.")
+            if loop:
+                raise ValueError("Images that aren't gifs cannot loop.")
+            if duration:
+                raise ValueError("Images that aren't gifs cannot have a set duration.")
             self._im.save(save_file, format=filetype)
