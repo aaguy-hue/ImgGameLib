@@ -79,15 +79,16 @@ class Canvas:
             - duration: int - the duration of the gif in milliseconds
         """
         if self.gif:
-                self.gif_frames[0].save(
-                    save_file,
-                    format=filetype,
-                    save_all=True,
-                    append_images=self.gif_frames[1:],
-                    optimize=optimize_gif,
-                    loop=not loop,
-                    duration=duration
-                )
+            params = {
+                "fp":save_file,
+                "format":filetype,
+                "save_all":True,
+                "append_images":self.gif_frames[1:],
+                "optimize":optimize_gif,
+                "duration":duration
+            }
+            if loop: params["loop"] = 0
+            self.gif_frames[0].save(**params)
         else:
             if optimize_gif:
                 raise ValueError("You cannot optimize an image which isn't a gif.")
