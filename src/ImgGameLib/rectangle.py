@@ -1,15 +1,36 @@
-from .canvas import Canvas
 from .drawable import Drawable
 
-from typing import Tuple
+from typing import Tuple, Union
 from PIL import ImageDraw, ImageColor
 
 class Rectangle(Drawable):
-    def __init__(self, x1: int, y1: int, width: int, height: int, border="black", fill=None):
+    """A simple rectangle that can be drawn to a canvas.
+    
+    Methods:
+        - move
+        - draw
+        - coords
+        - center
+    """
+    def __init__(self, x1: int, y1: int, width: int, height: int, border: Union[tuple, str]="black", fill: Union[tuple, str]=None, border_thickness: int=1):
+        """Initializes a rectangle.
+        
+        Required Parameters:
+            - x1: int - the first x coordinate
+            - y1: int - the first y coordinate
+            - width: int - the width of the rectangle
+            - height: int - the height of the rectangle
+        
+        Optional Parameters:
+            - border: Union[tuple, str] - the border color of the rectangle
+            - fill: Union[tuple, str] - the fill color of the rectangle
+            - border_thickness: int - the thickness of the border
+        """
         self.x1 = x1
         self.y1 = y1
         self.x2 = x1+width
         self.y2 = y1+height
+        self.border_thickness = border_thickness
         self.border = ImageColor.getrgb(border)
         self.fill = ImageColor.getrgb(fill)
         self.drawn = False
@@ -27,25 +48,16 @@ class Rectangle(Drawable):
         self.x2 += x
         self.y1 += y
         self.y2 += y
-        self.draw_object.rectangle(
-            (self.x1, self.y1, self.x2, self.y2),
-            outline=self.border,
-            fill=self.fill
-        )
+        self.canvas._draw_rectangle(self)
     
-    def draw(self, canvas: Canvas):
+    def draw(self, canvas: "Canvas"):
         """Draw the rectangle to the canvas.
         
         Parameters:
             canvas: Canvas - the canvas to draw the rectangle to"""
         self.drawn = True
         self.canvas = canvas
-        self.draw_object: ImageDraw.ImageDraw = self.canvas.get_imagedraw()
-        self.draw_object.rectangle(
-            (self.x1, self.y1, self.x2, self.y2),
-            outline=self.border,
-            fill=self.fill
-        )
+        self.canvas._draw_rectangle(self)
     
     def coords(self) -> Tuple[int, int, int, int]:
         return self.x1, self.y1, self.x2, self.y2

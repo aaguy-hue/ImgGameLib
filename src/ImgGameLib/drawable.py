@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from .canvas import Canvas
 from typing import Tuple
 
 
@@ -24,6 +23,6 @@ class Drawable(ABC):
         ...
     
     @abstractmethod
-    def draw(self, canvas: Canvas):
+    def draw(self, canvas: "Canvas"):
         """Draws the object to a canvas."""
         ...
