@@ -18,7 +18,7 @@ class Drawable(ABC):
         ...
     
     @abstractmethod
-    def move(self, x: int, y: int) -> None:
+    def move(self, x: int, y: int, transition=False) -> None:
         """Moves the object by some x and y."""
         ...
     
