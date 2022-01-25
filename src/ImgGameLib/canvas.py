@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from typing import IO, Optional, Union
 from PIL import Image, ImageColor, ImageDraw
 
@@ -63,6 +64,17 @@ class Canvas:
         )
         if self.gif:
             self._append_frame()
+    
+    @property
+    def is_gif(self) -> bool:
+        return self.gif
+    
+    def discard(self) -> None:
+        """Gets rid of all previous frames of the animation."""
+        if not self.gif:
+            raise ValueError("This function is not applicable for images.")
+        self._im = self.gif_frames[-1]
+        self.gif_frames = [self._im.copy()]
     
     def save(self, save_file: Union[str, IO], filetype: Optional[str]=None, *, optimize_gif: bool=False, loop: bool=False, duration: int=0, no_gif: bool=False) -> None:
         """Saves the image to a file.
