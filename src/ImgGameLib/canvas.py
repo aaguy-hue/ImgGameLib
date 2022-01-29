@@ -1,14 +1,18 @@
-from multiprocessing.sharedctypes import Value
 from typing import IO, Optional, Union
 from PIL import Image, ImageColor, ImageDraw
+
+from ImgGameLib import constants
 
 class Canvas:
     """A simple canvas you can draw stuff upon.
 
     Methods:
-        - show - display the image
-        - get_imagedraw - return the PIL ImageDraw object
-
+        - erase
+        - show
+        - discard
+        - register_rigidbody
+        - check_collision
+        - check_outofbounds
     """
     # This is based upon the tkinter canvas
     def __init__(self, width, height, bg_color: Union[tuple, str]="white", gif: bool=False) -> None:
@@ -34,6 +38,10 @@ class Canvas:
 
         if self.gif:
             self.gif_frames = [self._im.copy()]
+        
+        self.rigidbodies = {
+            "rect": [],
+        }
     
     def erase(self, x1, y1, x2, y2) -> None:
         """Erases a selection of the image, with the selection being a rectangle.
@@ -52,7 +60,7 @@ class Canvas:
             raise ValueError("Displaying gifs is not supported yet.")
         self._im.show()
     
-    def _append_frame(self):
+    def _append_frame(self) -> None:
         self.gif_frames.append(self._im.copy())
 
     def _draw_rectangle(self, rect: "Rectangle") -> None:
@@ -75,6 +83,59 @@ class Canvas:
             raise ValueError("This function is not applicable for images.")
         self._im = self.gif_frames[-1]
         self.gif_frames = [self._im.copy()]
+    
+    def register_rigidbody(self, collider_type: int, coords: list) -> None:
+        """Registers an item as a rigidbody item.
+        
+        Required Parameters:
+            collider_type: int - the type of collider (import constants for these)
+            coords: list - a list of the coordinates of the rigidbody
+        """
+        if collider_type == constants.RECT_COLLIDER:
+            if len(coords) != 4:
+                raise ValueError("Rectangle colliders must have exactly 4 coordinates: x1, y1, x2, and y2.")
+            self.rigidbodies["rect"].append(coords)
+        else:
+            raise ValueError("Invalid collider type.")
+    
+    def check_collision(self, coords: Union[list, tuple], collider_type: int) -> bool:
+        """Checks if there is collision between some object and a rigidbody.
+        
+        Required Parameters:
+            coords: Union[list, tuple] - a drawable object's coordinates to check if it has collided with something
+            collider_type: int - the type of collider
+        """
+        if collider_type == constants.RECT_COLLIDER:
+            for rect_rigidbody in self.rigidbodies["rect"]:
+                a_left = coords[0]
+                a_top = coords[1]
+                a_right = coords[2]
+                a_bottom = coords[3]
+                b_left = rect_rigidbody[0]
+                b_top = rect_rigidbody[1]
+                b_right = rect_rigidbody[2]
+                b_bottom = rect_rigidbody[3]
+
+                if not (a_left >= b_right or a_right <= b_left
+                        or a_bottom <= b_top or a_top >= b_bottom):
+                    return True
+        else:
+            raise ValueError("Collisions are currently unsupported for this drawable.")
+        return False
+    
+    def check_outofbounds(self, drawable: "Drawable") -> bool:
+        """Checks if an object is no longer visible in the image.
+        
+        Required Parameters:
+            drawable: Drawable - a drawable object to check if is out of the image
+        """
+        if drawable.drawable_type == "rect":
+            if drawable.x1 < 0 or drawable.y1 < 0 or drawable.x2 > self.width or drawable.y2 > self.height:
+                return True
+        else:
+            raise ValueError("This function is currently unsupported for this drawable.")
+        
+        return False
     
     def save(self, save_file: Union[str, IO], filetype: Optional[str]=None, *, optimize_gif: bool=False, loop: bool=False, duration: int=0, no_gif: bool=False) -> None:
         """Saves the image to a file.

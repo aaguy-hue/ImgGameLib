@@ -26,3 +26,8 @@ class Drawable(ABC):
     def draw(self, canvas: "Canvas"):
         """Draws the object to a canvas."""
         ...
+    
+    @abstractmethod
+    def apply_gravity(self, canvas: "Canvas"):
+        """Applies gravity to the object."""
+        ...
