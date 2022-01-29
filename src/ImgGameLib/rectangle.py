@@ -86,17 +86,15 @@ class Rectangle(Drawable):
         if self.rigidbody:
             self.canvas.register_rigidbody(
                 constants.RECT_COLLIDER,
-                [
-                    self.x1,
-                    self.y1,
-                    self.x2,
-                    self.y2
-                ]
+                self
             )
         self.canvas._draw_rectangle(self)
     
     def apply_gravity(self) -> None:
         """Applies gravity to a rectangle. Only recommended for simple scenarios. In more complex cases, make a loop and use Canvas.check_collision(rect.coords(), Rectangle.collider) to check for collision with rigidbodies."""
+        if not self.drawn:
+            raise ValueError("You must first draw the rectangle before applying gravity to it.")
+        
         velocity_y = 0
         acceleration_y = 0.6
         

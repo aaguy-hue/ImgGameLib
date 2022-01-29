@@ -84,17 +84,15 @@ class Canvas:
         self._im = self.gif_frames[-1]
         self.gif_frames = [self._im.copy()]
     
-    def register_rigidbody(self, collider_type: int, coords: list) -> None:
+    def register_rigidbody(self, collider_type: int, drawable: "Drawable") -> None:
         """Registers an item as a rigidbody item.
         
         Required Parameters:
             collider_type: int - the type of collider (import constants for these)
-            coords: list - a list of the coordinates of the rigidbody
+            drawable: Drawable - a drawable for the rigidbody
         """
         if collider_type == constants.RECT_COLLIDER:
-            if len(coords) != 4:
-                raise ValueError("Rectangle colliders must have exactly 4 coordinates: x1, y1, x2, and y2.")
-            self.rigidbodies["rect"].append(coords)
+            self.rigidbodies["rect"].append(drawable)
         else:
             raise ValueError("Invalid collider type.")
     
@@ -107,14 +105,8 @@ class Canvas:
         """
         if collider_type == constants.RECT_COLLIDER:
             for rect_rigidbody in self.rigidbodies["rect"]:
-                a_left = coords[0]
-                a_top = coords[1]
-                a_right = coords[2]
-                a_bottom = coords[3]
-                b_left = rect_rigidbody[0]
-                b_top = rect_rigidbody[1]
-                b_right = rect_rigidbody[2]
-                b_bottom = rect_rigidbody[3]
+                a_left, a_top, a_right, a_bottom = coords
+                b_left, b_top, b_right, b_bottom = rect_rigidbody.coords()
 
                 if not (a_left >= b_right or a_right <= b_left
                         or a_bottom <= b_top or a_top >= b_bottom):
