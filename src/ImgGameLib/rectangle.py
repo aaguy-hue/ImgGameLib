@@ -15,6 +15,7 @@ class Rectangle(Drawable):
         - apply_gravity
     """
     collider = constants.RECT_COLLIDER
+    drawable_type = "rect"
 
     def __init__(self, x1: int, y1: int, width: int, height: int, border: Union[tuple, str]="black", fill: Union[tuple, str]="black", border_thickness: int=1, rigidbody: bool=False):
         """Initializes a rectangle.
@@ -31,7 +32,6 @@ class Rectangle(Drawable):
             - border_thickness: int - the thickness of the border
             - rigidbody: bool - whether objects will stop when falling upon colliding with this rectangle
         """
-        self.drawable_type = "rect"
         self.x1 = x1
         self.y1 = y1
         self.x2 = x1+width
@@ -55,6 +55,9 @@ class Rectangle(Drawable):
         if transition and not self.canvas.gif:
             raise ValueError("You can only generate transitions for gifs.")
 
+        x = round(x)
+        y = round(y)
+        
         if transition:
             add_num_x = 1 if abs(x) == x else -1
             add_num_y = 1 if abs(y) == y else -1
@@ -100,7 +103,6 @@ class Rectangle(Drawable):
         
         while not self.canvas.check_outofbounds(self) and not self.canvas.check_collision(self.coords(), Rectangle.collider):
             velocity_y += acceleration_y
-            coords = list()
             self.move(y=velocity_y)
     
     def coords(self) -> Tuple[int, int, int, int]:

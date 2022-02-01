@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
+from . import constants
 from typing import Tuple
 
 
 class Drawable(ABC):
+    collider = constants.RECT_COLLIDER
+    
     @abstractmethod
     def center(self) -> Tuple[int, int]:
         """Returns the coordinates at the center of the object.

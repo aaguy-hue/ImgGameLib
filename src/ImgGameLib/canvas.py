@@ -73,6 +73,28 @@ class Canvas:
         if self.gif:
             self._append_frame()
     
+    def _draw_sprite(self, sprite: "Sprite") -> None:
+        # self._im.paste(
+        #     sprite.sprite,
+        #     (
+        #         sprite.x1,
+        #         sprite.y1,
+        #         sprite.x2,
+        #         sprite.y2
+        #     )
+        # )
+        the_sprite = Image.new(
+            mode="RGBA",
+            size=(self.width, self.height),
+            color=(0, 0, 0, 0)
+        )
+        the_sprite.paste(sprite.sprite, (sprite.x1, sprite.y1, sprite.x2, sprite.y2))
+        self._im = Image.alpha_composite(self._im, the_sprite)
+        self._draw: ImageDraw.ImageDraw = ImageDraw.Draw(self._im)
+
+        if self.gif:
+            self._append_frame()
+    
     @property
     def is_gif(self) -> bool:
         return self.gif
