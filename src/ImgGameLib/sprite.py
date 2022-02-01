@@ -26,7 +26,6 @@ class Sprite(Drawable):
             self.sprite = sprite
         else:
             self.sprite = Image.open(sprite)
-        self.sprite.convert("RGBA")
         self.width, self.height = self.sprite.size
         if width is not None:
             self.sprite = self.sprite.resize((width, self.height))
