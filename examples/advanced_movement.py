@@ -12,7 +12,7 @@ def goLeft(canvas, player):
         velocity /= 1.1
         player.move(x=-velocity)
     canvas.save("game.gif", duration=20)
-    # canvas.discard()
+    canvas.discard_frames()
 def goRight(canvas, player):
     print("Moving right...")
     velocity = 0
@@ -25,7 +25,7 @@ def goRight(canvas, player):
         velocity /= 1.1
         player.move(x=velocity)
     canvas.save("game.gif", duration=20)
-    # canvas.discard()
+    canvas.discard_frames()
 def jump(canvas, player):
     print("Jumping...")
     velocity = 1
@@ -39,6 +39,7 @@ def jump(canvas, player):
         player.move(y=-velocity)
     player.apply_gravity()
     canvas.save("game.gif", duration=40)
+    canvas.discard_frames()
 
 
 canvas = igl.Canvas(800, 800, bg_color="#99CDDE", gif=True)

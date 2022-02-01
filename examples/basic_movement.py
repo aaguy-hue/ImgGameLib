@@ -4,12 +4,10 @@ def goLeft(canvas, player):
     print("Moving left...")
     player.move(x=-10, transition=True)
     canvas.save("game.gif", duration=20)
-    # canvas.discard()
 def goRight(canvas, player):
     print("Moving right...")
     player.move(x=10, transition=True)
     canvas.save("game.gif", duration=20)
-    # canvas.discard()
 def jump(canvas, player):
     print("Jumping...")
     player.move(y=-50, transition=True)

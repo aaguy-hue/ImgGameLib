@@ -77,11 +77,12 @@ class Canvas:
     def is_gif(self) -> bool:
         return self.gif
     
-    def discard(self) -> None:
+    def discard_frames(self) -> None:
         """Gets rid of all previous frames of the animation."""
         if not self.gif:
             raise ValueError("This function is not applicable for images.")
         self._im = self.gif_frames[-1]
+        self._draw: ImageDraw.ImageDraw = ImageDraw.Draw(self._im)
         self.gif_frames = [self._im.copy()]
     
     def register_rigidbody(self, collider_type: int, drawable: "Drawable") -> None:
