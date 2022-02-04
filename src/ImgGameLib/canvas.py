@@ -10,9 +10,11 @@ class Canvas:
         - erase
         - show
         - discard
+        - copy
         - register_rigidbody
         - check_collision
         - check_outofbounds
+        - save
     """
     # This is based upon the tkinter canvas
     def __init__(self, width, height, bg_color: Union[tuple, str]="white", gif: bool=False) -> None:
@@ -96,6 +98,15 @@ class Canvas:
 
         if self.gif:
             self._append_frame()
+    
+    def copy(self):
+        cp = Canvas(width=self.width, height=self.height, bg_color=self.bg_color, gif=self.gif)
+        cp._im = self._im.copy()
+        cp._draw = ImageDraw.Draw(cp._im)
+
+        if self.gif:
+            cp.gif_frames = [self.gif_frames[i].copy() for i in range(len(self.gif_frames))]
+        return cp
     
     @property
     def is_gif(self) -> bool:
