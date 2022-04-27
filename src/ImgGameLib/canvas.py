@@ -144,8 +144,8 @@ class Canvas:
                 a_left, a_top, a_right, a_bottom = coords
                 b_left, b_top, b_right, b_bottom = rect_rigidbody.coords()
 
-                if not (a_left >= b_right or a_right <= b_left
-                        or a_bottom <= b_top or a_top >= b_bottom):
+                if not (a_left > b_right or a_right < b_left
+                        or a_bottom < b_top or a_top > b_bottom):
                     return True
         else:
             raise ValueError("Collisions are currently unsupported for this drawable.")
